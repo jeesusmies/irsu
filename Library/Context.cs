@@ -2,7 +2,6 @@
 {
     public class Context
     {
-        public string User;
-        public string Contents;
+        public Message Message { get; init; }
     }
 }

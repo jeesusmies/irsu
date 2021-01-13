@@ -11,7 +11,7 @@ var client = new Client();
 [Event] 
 async Task OnMessage(Context ctx)
 {
-    Console.WriteLine(ctx.Contents);
+    Console.WriteLine(ctx.Message.Contents);
 }
 
 [Command]
@@ -20,6 +20,8 @@ async Task Ping(Context ctx)
 {
     
 }
+
+client.Start();
 
 /*
  ILLUSTRATION;
