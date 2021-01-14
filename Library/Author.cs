@@ -6,5 +6,6 @@
         public string Name;
         public string Channel;
         public string Contents;
+        public string Hostname;
     }
 }

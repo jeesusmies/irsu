@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using umaru.Library.Attributes.Command;
@@ -9,14 +8,14 @@ using umaru.Library;
 var client = new Client();
 
 [Event] 
-async Task OnMessage(Context ctx)
+static async Task OnMessage(Context ctx)
 {
     Console.WriteLine(ctx.Message.Contents);
 }
 
 [Command]
-[Alias(new [] { "p" })] // csharp lol
-async Task Ping(Context ctx)
+//[Alias(new [] { "p" })] // csharp lol
+static async Task Ping(Context ctx)
 {
     
 }
