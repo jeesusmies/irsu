@@ -59,7 +59,7 @@ namespace umaru.Library
                 }
             }
 
-            _eventHandlers.InvokeMethod("OnReady", new object[] { new Context() { Client = this } } ).Wait();
+            _eventHandlers.InvokeMethod("OnReady", new object[] { new Context() { Client = this } } ).ConfigureAwait(true);
             this.StartHandling().Wait();
         }
 

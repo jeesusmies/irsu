@@ -38,8 +38,11 @@ namespace umaru.Library
                                 }
                             };
 
-                            await client._commandHandlers.InvokeMethod(message.Split(' ')[0], new object[] { context });
-                            await client._eventHandlers.InvokeMethod("OnMessage", new object[] { context });
+                            Task.Factory.StartNew(async () =>
+                            {
+                                await client._commandHandlers.InvokeMethod(message.Split(' ')[0], new object[] { context } );
+                                await client._eventHandlers.InvokeMethod("OnMessage", new object[] { context } );
+                            }).ConfigureAwait(false);
                             
                             break;
                     }
