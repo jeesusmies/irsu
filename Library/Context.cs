@@ -1,15 +1,24 @@
-﻿namespace umaru.Library
+﻿using System;
+using System.Threading.Tasks;
+
+namespace umaru.Library
 {
     public class Context
     {
-        private Client Client { get; init; }
+        internal Client Client { get; init; }
 
         public Message Message { get; init; }
-        public string Opcode { get; init; }
 
-        public void Send(string message)
+        public async Task Send(string message)
         {
-            Client._outputStream.WriteLine($"PRIVMSG {Message.Name} :{message}");
+            await Client._outputStream.WriteLineAsync($"PRIVMSG {Message.Author} :{message}");
+            await Client._outputStream.FlushAsync();
+        }
+
+        public async Task JoinChannel(string channel)
+        {
+            await Client._outputStream.WriteLineAsync($"JOIN {channel}");
+            await Client._outputStream.FlushAsync();
         }
     }
 }

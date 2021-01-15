@@ -9,42 +9,70 @@ namespace umaru.Library
 {
     public class Client
     {
-        private TcpClient _tcpClient;
+        internal TcpClient _tcpClient;
 
         internal StreamReader _inputStream;
         internal StreamWriter _outputStream;
 
-        private Dictionary<string, object> _commandHandlers = new();
-        private Dictionary<string, object> _eventHandlers = new();
-        
-        public Client()
+        internal Dictionary<string, MethodInfo> _commandHandlers = new();
+        internal Dictionary<string, MethodInfo> _eventHandlers = new();
+
+        public string Username;
+        private string _password;
+        private string _prefix;
+
+        public Client(string username, string password, string prefix)
         {
+            Username = username;
+            _password = password;
+            _prefix = prefix;
+
             RegisterMethods();
-            
+
             // irc server for osu
             // i think u can literally use this for any server
             _tcpClient = new TcpClient("irc.ppy.sh", 6667);
         }
 
-        public void Start(string username, string password, string prefix)
+        public void Start()
         {
-            _inputStream = new StreamReader(_tcpClient.GetStream());
-            _outputStream = new StreamWriter(_tcpClient.GetStream()) { NewLine = "\r\n" };;
+            RegisterMethods();
             
+            _inputStream = new StreamReader(_tcpClient.GetStream());
+            _outputStream = new StreamWriter(_tcpClient.GetStream()) {NewLine = "\r\n"};
+
             // not sure if i should do 3 writelines or 1 writeline?
-            _outputStream.WriteLine($"PASS {password}\r\nUSER {username} 0 * :{username}\r\nNICK {username}");
+            _outputStream.WriteLine($"PASS {_password}\r\nUSER {Username} 0 * :{Username}\r\nNICK {Username}");
             _outputStream.Flush();
+
+            string data;
+            while (_tcpClient.Connected)
+            {
+                if ((data = _inputStream.ReadLine()) != null)
+                {
+                    Console.WriteLine(data);
+                    
+                    var dataArr = data.Split(' ');
+
+                    if (dataArr[1] == "001")
+                        break;
+                }
+            }
+
+            _eventHandlers.InvokeMethod("OnReady", new object[] { new Context() { Client = this } } ).Wait();
+            this.StartHandling().Wait();
         }
 
         private void RegisterMethods()
         {
             /* REFLECTION TO GET ALL EVENTS AND COMMANDS */
-            Assembly info = Assembly.GetExecutingAssembly();
+            var info = Assembly.GetExecutingAssembly();
 
             object att;
             foreach(var type in info.GetTypes())
             {
-                foreach (var method in type.GetMethods())
+                foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic |
+                                                       BindingFlags.Static | BindingFlags.Instance))
                 {
                     if (method.GetCustomAttributes(typeof(Command), false).Length > 0)
                     {
@@ -54,21 +82,41 @@ namespace umaru.Library
                         {
                             foreach (var alias in aliasAtt.Aliases)
                             {
-                                _commandHandlers.Add(alias, method);
+                                try
+                                {
+                                    _commandHandlers.Add(alias, method);
+                                }
+                                catch
+                                {
+                                }
                             }
                         }
-                        _commandHandlers.Add(method.Name, method);
+                        
+                        try
+                        {
+                            _commandHandlers.Add(method.Name, method);
+                        }
+                        catch
+                        {
+                        }
                     }
                 }
             }
             
             foreach(var type in info.GetTypes())
             {
-                foreach (var method in type.GetMethods())
+                foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.NonPublic |
+                                                       BindingFlags.Static | BindingFlags.Instance))
                 {
                     if (method.GetCustomAttributes(typeof(Event), false).Length > 0)
                     {
-                        _eventHandlers.Add(method.Name, method);
+                        try
+                        {
+                            _eventHandlers.Add(method.GetBaseDefinition().Name, method);
+                        }
+                        catch
+                        {
+                        }
                     }
                 }
             }
