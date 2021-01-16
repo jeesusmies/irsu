@@ -1,4 +1,4 @@
-﻿namespace umaru.Library.Attributes.Command
+﻿namespace irsu.Library.Attributes.Command
 {
     public class Event : System.Attribute { }
 }
