@@ -1,4 +1,6 @@
 osu! bots made easy!
+structured like discord.py
++ prefix doesnt yet work :!
 
 # Example
 ```cs
