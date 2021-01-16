@@ -22,6 +22,7 @@ public static async Task OnMessage(Context ctx)
     Console.WriteLine($"<{ctx.Message.Author}> -> " +
                       $"{ctx.Message.Channel}: " +
                       $"{ctx.Message.Contents}");
+                      // output example; <jeesusmies> -> #osu: fuck pp!
 }
 
 [Command]
