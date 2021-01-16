@@ -1,4 +1,4 @@
-osu! bots made easy! (or any irc bots)
+osu! bots made easy! (or any irc bots)  
 structured like discord.py  
 wip and prefix doesnt yet work :!
 
