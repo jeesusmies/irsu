@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using umaru.Library.Attributes.Command;
-using umaru.Library;
+using irsu.Library.Attributes.Command;
+using irsu.Library;
 
 class TestClass
 {
