@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace umaru.Library
+namespace irsu.Library
 {
     public static class Invoker
     {
