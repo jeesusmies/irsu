@@ -25,6 +25,7 @@ public static async Task OnMessage(Context ctx)
 }
 
 [Command]
+[Alias(new [] { "ping" })] // command can be called using Ping or ping
 public static async Task Ping(Context ctx) 
 {
     await ctx.Send("Pong!");
