@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
 using System.Reflection;
-using umaru.Library.Attributes.Command;
+using irsu.Library.Attributes.Command;
 
-namespace umaru.Library
+namespace irsu.Library
 {
     public class Client
     {
